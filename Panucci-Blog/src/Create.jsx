@@ -4,21 +4,22 @@ import { useNavigate } from "react-router-dom";
 const Create = () => {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
-  const [author, setAuthor] = useState('mario');
+  const [author, setAuthor] = useState('panucci');
   const navigate = useNavigate();
+  const [isPending, setIsPending] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const blog = { title, body, author };
 
-    // fetch('http://localhost:8000/blogs/', {
-      fetch('https://jsonplaceholder.typicode.com/posts/', {
+    setIsPending(true);
+
+    fetch('http://localhost:8000/blogs/', {
       method: 'POST',
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(blog)
     }).then(() => {
-      // history.go(-1);
-      // history.push('/');
+      setIsPending(false);
       navigate('/')
     })
   }
@@ -48,7 +49,8 @@ const Create = () => {
           <option value="panucci">panucci</option>
           <option value="73hondrd">73hondrd</option>
         </select>
-        <button>Add Blog</button>
+        { !isPending && <button>Add Blog</button>}
+        { isPending && <button disabled>Adding blog...</button> }
       </form>
     </div>
   );
